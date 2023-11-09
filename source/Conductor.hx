@@ -181,4 +181,24 @@ class Rating
 	{
 		Reflect.setField(PlayState.instance, counter, Reflect.field(PlayState.instance, counter) + blah);
 	}
+
+	public static inline function getDefaultList():Array<Rating> {
+		final good:Rating = new Rating('good');
+		final bad:Rating = new Rating('bad');
+		final shit:Rating = new Rating('shit');
+
+		good.ratingMod = 0.7;
+		bad.ratingMod = 0.4;
+		shit.ratingMod = 0;
+
+		good.score = 200;
+		bad.score = 100;
+		shit.score = 50;
+
+		good.noteSplash = false;
+		bad.noteSplash = false;
+		shit.noteSplash = false;
+
+		return [new Rating('sick'), good, bad, shit];
+	}
 }
