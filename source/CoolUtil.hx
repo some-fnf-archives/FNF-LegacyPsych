@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColor;
 import flixel.FlxG;
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
@@ -58,7 +59,7 @@ class CoolUtil
 		return Math.max(min, Math.min(max, value));
 	}
 
-	public static function coolTextFile(path:String):Array<String>
+	public static inline function coolTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = [];
 		#if sys
@@ -66,27 +67,19 @@ class CoolUtil
 		#else
 		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
 		#end
-
 		for (i in 0...daList.length)
-		{
 			daList[i] = daList[i].trim();
-		}
-
 		return daList;
 	}
-	public static function listFromString(string:String):Array<String>
+	public static inline function listFromString(string:String):Array<String>
 	{
 		var daList:Array<String> = [];
 		daList = string.trim().split('\n');
-
 		for (i in 0...daList.length)
-		{
 			daList[i] = daList[i].trim();
-		}
-
 		return daList;
 	}
-	public static function dominantColor(sprite:flixel.FlxSprite):Int{
+	public static inline function dominantColor(sprite:flixel.FlxSprite):Int{
 		var countByColor:Map<Int, Int> = [];
 		for(col in 0...sprite.frameWidth){
 			for(row in 0...sprite.frameHeight){
@@ -111,7 +104,17 @@ class CoolUtil
 		}
 		return maxKey;
 	}
+	public static inline function colorFromString(color:String):FlxColor
+	{
+		var hideChars = ~/[\t\n\r]/;
+		var color:String = hideChars.split(color).join('').trim();
+		if(color.startsWith('0x')) color = color.substring(color.length - 6);
 
+		var colorNum:Null<FlxColor> = FlxColor.fromString(color);
+		if(colorNum == null) colorNum = FlxColor.fromString('#${color}');
+		return colorNum != null ? colorNum : FlxColor.WHITE;
+	}
+	
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		var dumbArray:Array<Int> = [];
