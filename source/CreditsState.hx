@@ -75,38 +75,38 @@ class CreditsState extends MusicBeatState
 		var arrayOfFolders:Array<String> = Paths.getModDirectories();
 		arrayOfFolders.push('');
 		for (folder in arrayOfFolders)
-		{
 			pushModCreditsToList(folder);
-		}
 		#end
 
-		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
+		final defaultList:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Psych Engine Team'],
-			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
-			['RiverOaken',			'river',			'Main Artist/Animator of Psych Engine',							'https://twitter.com/RiverOaken',		'B42F71'],
-			['shubs',				'shubs',			'Additional Programmer of Psych Engine',						'https://twitter.com/yoshubs',			'5E99DF'],
+			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								 'https://ko-fi.com/shadowmario',		 '444444'],
+			['Riveren',				'riveren',			'Main Artist/Animator of Psych Engine',							 'https://twitter.com/riverennn',		 '14967B'],
 			[''],
 			['Former Engine Members'],
-			['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								'https://twitter.com/bbsub3',			'3E813A'],
+			['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								 'https://twitter.com/bbsub3',			 '3E813A'],
+			['shubs',				'',					'Ex-Programmer of Psych Engine\nI don\'t support them.',		 '',									 'A1A1A1'],
 			[''],
 			['Engine Contributors'],
-			['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		'https://twitter.com/flicky_i',			'9E29CF'],
-			['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	'https://twitter.com/gedehari',			'E1843A'],
-			['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										'https://twitter.com/EliteMasterEric',	'FFBD40'],
-			['PolybiusProxy',		'proxy',			'.MP4 Video Loader Library (hxCodec)',							'https://twitter.com/polybiusproxy',	'DCD294'],
-			['KadeDev',				'kade',				'Fixed some cool stuff on Chart Editor\nand other PRs',			'https://twitter.com/kade0912',			'64A250'],
-			['Keoiki',				'keoiki',			'Note Splash Animations',										'https://twitter.com/Keoiki_',			'D2D2D2'],
-			['Nebula the Zorua',	'nebula',			'LUA JIT Fork and some Lua reworks',							'https://twitter.com/Nebula_Zorua',		'7D40B2'],
-			['Smokey',				'smokey',			'Sprite Atlas Support',											'https://twitter.com/Smokey_5_',		'483D92'],
+			['CrowPlexus',			'face',				'Input System v3, Major Help and Other PRs\nTO DO: Add Icon',	 'https://twitter.com/crowplexus',		 'A1A1A1'],
+			['Keoiki',				'keoiki',			'Note Splash Animations and Latin Alphabet',					 'https://twitter.com/Keoiki_',			 'D2D2D2'],
+			['SqirraRNG',			'sqirra',			'Crash Handler and Base code for\nChart Editor\'s Waveform',	 'https://twitter.com/gedehari',		 'E1843A'],
+			['EliteMasterEric',		'mastereric',		'Runtime Shaders support',										 'https://twitter.com/EliteMasterEric',	 'FFBD40'],
+			['PolybiusProxy',		'proxy',			'.MP4 Video Loader Library (hxCodec)',							 'https://twitter.com/polybiusproxy',	 'DCD294'],
+			['Tahir',				'face',				'Implementing and maintaining SScript on Psych\nTO DO: Add Icon','https://github.com/TahirKarabekiroglu','A1A1A1'],
+			['iFlicky',				'flicky',			'Composer of Psync and Tea Time\nMade the Dialogue Sounds',		 'https://twitter.com/flicky_i',		 '9E29CF'],
+			['KadeDev',				'kade',				'Fixed some cool stuff on Chart Editor\nand other PRs',			 'https://twitter.com/kade0912',		 '64A250'],
+			['superpowers04',		'superpowers04',	'LUA JIT Fork',													 'https://twitter.com/superpowers04',	 'B957ED'],
+			['Smokey',				'smokey',			'Sprite Atlas Support',											 'https://twitter.com/Smokey_5_',		 '483D92'],
 			[''],
 			["Funkin' Crew"],
-			['ninjamuffin99',		'ninjamuffin99',	"Programmer of Friday Night Funkin'",							'https://twitter.com/ninja_muffin99',	'CF2D2D'],
-			['PhantomArcade',		'phantomarcade',	"Animator of Friday Night Funkin'",								'https://twitter.com/PhantomArcade3K',	'FADC45'],
-			['evilsk8r',			'evilsk8r',			"Artist of Friday Night Funkin'",								'https://twitter.com/evilsk8r',			'5ABD4B'],
-			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',		'378FC7']
+			['ninjamuffin99',		'ninjamuffin99',	"Programmer of Friday Night Funkin'",							 'https://twitter.com/ninja_muffin99',	 'CF2D2D'],
+			['PhantomArcade',		'phantomarcade',	"Animator of Friday Night Funkin'",								 'https://twitter.com/PhantomArcade3K',	 'FADC45'],
+			['evilsk8r',			'evilsk8r',			"Artist of Friday Night Funkin'",								 'https://twitter.com/evilsk8r',		 '5ABD4B'],
+			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								 'https://twitter.com/kawaisprite',		 '378FC7']
 		];
 		
-		for(i in pisspoop){
+		for(i in defaultList) {
 			creditsStuff.push(i);
 		}
 	
@@ -126,7 +126,11 @@ class CreditsState extends MusicBeatState
 					Paths.currentModDirectory = creditsStuff[i][5];
 				}
 
-				var icon:AttachedSprite = new AttachedSprite('credits/' + creditsStuff[i][1]);
+				var iconPath:String = "credits/missing_icon";
+				if (Paths.image('credits/${creditsStuff[i][1]}') != null)
+					iconPath = 'credits/${creditsStuff[i][1]}';
+
+				var icon:AttachedSprite = new AttachedSprite(iconPath);
 				icon.xAdd = optionText.width + 10;
 				icon.sprTracker = optionText;
 	

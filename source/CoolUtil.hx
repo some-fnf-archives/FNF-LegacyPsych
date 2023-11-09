@@ -5,7 +5,7 @@ import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
-import flixel.system.FlxSound;
+import #if (flixel >= "5.3.0") flixel.sound.FlxSound #else flixel.system.FlxSound #end;
 #if sys
 import sys.io.File;
 import sys.FileSystem;

@@ -7,7 +7,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
-import flixel.system.FlxSound;
+import #if (flixel >= "5.3.0") flixel.sound.FlxSound #else flixel.system.FlxSound #end;
 import flash.media.Sound;
 
 using StringTools;

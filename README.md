@@ -2,7 +2,7 @@
 Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.
 
 ## Installation:
-You must have [the most up-to-date version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
+You must have [the latest version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
 
 Follow a Friday Night Funkin' source code compilation tutorial, after this you will need to install LuaJIT.
 
@@ -19,12 +19,11 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Credits:
 * Shadow Mario - Programmer
-* RiverOaken - Artist
-* Yoshubs - Assistant Programmer
+* Riveren - Artist
 
 ### Special Thanks
 * bbpanzu - Ex-Programmer
-* shubs - New Input System
+* Yoshubs - New Input System (I do not support her.)
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
