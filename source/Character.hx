@@ -83,11 +83,7 @@ class Character extends FlxSprite
 	{
 		super(x, y);
 
-		#if (haxe >= "4.0.0")
-		animOffsets = new Map();
-		#else
 		animOffsets = new Map<String, Array<Dynamic>>();
-		#end
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 		antialiasing = ClientPrefs.globalAntialiasing;
@@ -291,13 +287,13 @@ class Character extends FlxSprite
 					if(animation.curAnim.finished) playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
 			}
 
+			if (animation.curAnim.name.startsWith('sing'))
+				holdTimer += elapsed;
+			else if(isPlayer)
+				holdTimer = 0;
+
 			if (!isPlayer)
 			{
-				if (animation.curAnim.name.startsWith('sing'))
-				{
-					holdTimer += elapsed;
-				}
-
 				if (holdTimer >= Conductor.stepCrochet * (0.0011 #if FLX_PITCH / (FlxG.sound.music != null ? FlxG.sound.music.pitch : 1) #end) * singDuration)
 				{
 					dance();
@@ -306,9 +302,10 @@ class Character extends FlxSprite
 			}
 
 			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
-			{
 				playAnim(animation.curAnim.name + '-loop');
-			}
+
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
+				playAnim('idle', true, false, 10);
 		}
 		super.update(elapsed);
 	}
