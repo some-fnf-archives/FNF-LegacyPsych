@@ -359,7 +359,7 @@ class Paths
 			localTrackedAssets.push(path);
 			return currentTrackedAssets.get(path);
 		}
-		trace('oh no its returning null NOOOO');
+		trace('failed to load graphic at "${path}", which returned null, does the file exist and is the name correctly typed?');
 		return null;
 	}
 
