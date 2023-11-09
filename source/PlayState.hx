@@ -2304,12 +2304,16 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function updateScore(miss:Bool = false)
+	public dynamic function updateScore(miss:Bool = false)
 	{
-		scoreTxt.text = 'Score: ' + songScore
-		+ ' | Misses: ' + songMisses
-		+ ' | Rating: ' + ratingName
-		+ (ratingName != '?' ? ' (${Highscore.floorDecimal(ratingPercent * 100, 2)}%) - $ratingFC' : '');
+		var str:String = ratingName;
+		if(ratingName != '?') {
+			str = '${ratingName} (${Highscore.floorDecimal(ratingPercent * 100, 2)}%)'
+			+ (ratingFC != null && ratingFC != "" ? ' - ${ratingFC}' : '');
+		}
+
+		var tempScore:String = 'Score: ${songScore} | Misses: ${songMisses} | Rating: ${str}';
+		scoreTxt.text = tempScore;
 
 		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
 		{
@@ -2325,6 +2329,20 @@ class PlayState extends MusicBeatState
 			});
 		}
 		callOnLuas('onUpdateScore', [miss]);
+	}
+
+	public dynamic function fullComboFunction():Void {
+		// Rating FC
+		ratingFC = "";
+		if (songMisses == 0) {
+			if (sicks > 0) ratingFC = "SFC";
+			if (goods > 0) ratingFC = "GFC";
+			if (bads > 0 || shits > 0) ratingFC = "FC";
+		}
+		else {
+			if (songMisses < 10) ratingFC = "SDCB";
+			else ratingFC = "Clear";
+		}
 	}
 
 	public function setSongTime(time:Float)
@@ -5226,13 +5244,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 
-			// Rating FC
-			ratingFC = "";
-			if (sicks > 0) ratingFC = "SFC";
-			if (goods > 0) ratingFC = "GFC";
-			if (bads > 0 || shits > 0) ratingFC = "FC";
-			if (songMisses > 0 && songMisses < 10) ratingFC = "SDCB";
-			else if (songMisses >= 10) ratingFC = "Clear";
+			fullComboFunction();
 		}
 		updateScore(badHit); // score will only update after rating is calculated, if it's a badHit, it shouldn't bounce -Ghost
 		setOnLuas('rating', ratingPercent);
