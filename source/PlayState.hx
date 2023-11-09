@@ -71,8 +71,11 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-#if VIDEOS_ALLOWED
-import vlc.MP4Handler;
+#if VIDEOS_ALLOWED 
+#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as VideoPlayer;
+#elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler as VideoPlayer;
+#elseif (hxCodec == "2.6.0") import VideoPlayer;
+#else import vlc.MP4Handler as VideoPlayer; #end
 #end
 
 using StringTools;
@@ -1619,7 +1622,7 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		var video:MP4Handler = new MP4Handler();
+		var video:VideoPlayer = new VideoPlayer();
 		video.playVideo(filepath);
 		video.finishCallback = function()
 		{
