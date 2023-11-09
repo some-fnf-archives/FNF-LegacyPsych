@@ -2,23 +2,20 @@
 Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.
 
 ## Installation:
-You must have [Haxe version 4.2.5](https://haxe.org/download/version/4.2.5/), seriously, stop using older or newer versions, it won't work!
+You must have [the most up-to-date version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
 
-open up a Command Prompt/PowerShell or Terminal, type `haxelib install hmm`
+Follow a Friday Night Funkin' source code compilation tutorial, after this you will need to install LuaJIT.
 
-after it finishes, simply type `haxelib run hmm install` in order to install all the needed libraries for *Psych Engine!*
+To install LuaJIT do this: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit` on a Command prompt/PowerShell
 
-If the compiler gives an error saying that hxCodec cannot be found read this issue to fix it: ShadowMario/FNF-PsychEngine#12770
+...Or if you don't want your mod to be able to run .lua scripts, delete the "LUA_ALLOWED" line on Project.xml
 
-## Customization:
 
-if you wish to disable things like *Lua Scripts* or *Video Cutscenes*, you can read over to `Project.xml`
+If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then re-install linc_luajit.
 
-inside `Project.xml`, you will find several variables to customize Psych Engine to your liking
+If you want video support on your mod, simply do `haxelib install hxCodec` on a Command prompt/PowerShell
 
-to start you off, disabling Videos should be simple, simply Delete the line `"VIDEOS_ALLOWED"` or comment it out by wrapping the line in XML-like comments, like this `<!-- YOUR_LINE_HERE -->`
-
-same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, this and other customization options are all available within the `Project.xml` file
+otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ## Credits:
 * Shadow Mario - Programmer
@@ -27,7 +24,7 @@ same goes for *Lua Scripts*, comment out or delete the line with `LUA_ALLOWED`, 
 
 ### Special Thanks
 * bbpanzu - Ex-Programmer
-* Yoshubs - New Input System
+* shubs - New Input System
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
@@ -53,7 +50,6 @@ _____________________________________
 ### Week 1:
   * New Dad Left sing sprite
   * Unused stage lights are now used
-  * Dad Battle has a spotlight effect for the breakdown
 ### Week 2:
   * Both BF and Skid & Pump does "Hey!" animations
   * Thunders does a quick light flash and zooms the camera in slightly
@@ -76,12 +72,9 @@ _____________________________________
 * You can now chart "Event" notes, which are bookmarks that trigger specific actions that usually were hardcoded on the vanilla version of the game.
 * Your song's BPM can now have decimal values
 * You can manually adjust a Note's strum time if you're really going for milisecond precision
-* You can change a note's type on the Editor, it comes with five example types:
+* You can change a note's type on the Editor, it comes with two example types:
   * Alt Animation: Forces an alt animation to play, useful for songs like Ugh/Stress
   * Hey: Forces a "Hey" animation instead of the base Sing animation, if Boyfriend hits this note, Girlfriend will do a "Hey!" too.
-  * Hurt Notes: If Boyfriend hits this note, he plays a miss animation and loses some health.
-  * GF Sing: Rather than the character hitting the note and singing, Girlfriend sings instead.
-  * No Animation: Character just hits the note, no animation plays.
 
 ## Multiple editors to assist you in making your own Mod
 ![Screenshot_3](https://user-images.githubusercontent.com/44785097/144629914-1fe55999-2f18-4cc1-bc70-afe616d74ae5.png)
@@ -109,4 +102,3 @@ _____________________________________
 * Some stuff based on Week 7's changes has been put in (Background colors on Freeplay, Note splashes)
 * You can reset your Score on Freeplay/Story Mode by pressing Reset button.
 * You can listen to a song or adjust Scroll Speed/Damage taken/etc. on Freeplay by pressing Space.
-* You can enable "Combo Stacking" in Gameplay Options. This causes the combo sprites to just be one sprite with an animation rather than sprites spawning each note hit.
