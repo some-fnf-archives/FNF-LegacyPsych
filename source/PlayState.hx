@@ -2312,8 +2312,10 @@ class PlayState extends MusicBeatState
 			+ (ratingFC != null && ratingFC != "" ? ' - ${ratingFC}' : '');
 		}
 
-		var tempScore:String = 'Score: ${songScore} | Misses: ${songMisses} | Rating: ${str}';
-		scoreTxt.text = tempScore;
+		var tempScore:String = 'Score: ${songScore}' +
+		(!instakillOnMiss ? ' | Misses: ${songMisses}' : "") +
+		' | Rating: ${str}';
+		scoreTxt.text = '${tempScore}\n';
 
 		if(ClientPrefs.scoreZoom && !miss && !cpuControlled)
 		{
