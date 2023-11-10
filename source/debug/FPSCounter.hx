@@ -57,15 +57,17 @@ class FPSCounter extends TextField
 			times.shift();
 
 		currentFPS = currentFPS < FlxG.drawFramerate ? times.length : FlxG.drawFramerate;
+		updateText();
+		deltaTimeout += deltaTime;
+	}
 
+	public dynamic function updateText():Void { // so people can override it in hscript
 		text = 'FPS: ${currentFPS}'
 		+ '\nMemory: ${flixel.util.FlxStringUtil.formatBytes(memoryMegas)}';
 
 		textColor = 0xFFFFFFFF;
-		if (currentFPS < ClientPrefs.framerate * 0.5)
+		if (currentFPS < FlxG.drawFramerate * 0.5)
 			textColor = 0xFFFF0000;
-
-		deltaTimeout += deltaTime;
 	}
 
 	inline function get_memoryMegas():Float
