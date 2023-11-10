@@ -62,7 +62,7 @@ class FPSCounter extends TextField
 		+ '\nMemory: ${flixel.util.FlxStringUtil.formatBytes(memoryMegas)}';
 
 		textColor = 0xFFFFFFFF;
-		if (memoryMegas > 3000 || currentFPS <= ClientPrefs.framerate / 2)
+		if (currentFPS < ClientPrefs.framerate * 0.5)
 			textColor = 0xFFFF0000;
 
 		deltaTimeout += deltaTime;
