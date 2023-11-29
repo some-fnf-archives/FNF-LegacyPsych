@@ -58,7 +58,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
-		Conductor.changeBPM(100);
+		Conductor.bpm = 100;
 		// FlxG.camera.followLerp = 1;
 		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
 		FlxG.camera.scroll.set();
@@ -122,7 +122,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				coolStartDeath(week7 ? 0.2 : 1.0);
 				if (week7) {
 					var exclude:Array<Int> = [];
-					//if(!ClientPrefs.cursing) exclude = [1, 3, 8, 13, 17, 21];
+					//if(!ClientPrefs.data.cursing) exclude = [1, 3, 8, 13, 17, 21];
 					FlxG.sound.play(Paths.sound('jeffGameover/jeffGameover-' + FlxG.random.int(1, 25, exclude)), 1, false, null, true, function() {
 						if(!isEnding) FlxG.sound.music.fadeIn(0.2, 1, 4);
 					});
