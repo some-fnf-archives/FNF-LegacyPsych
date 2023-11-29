@@ -6,7 +6,7 @@ You must have [the latest version of Haxe](https://haxe.org/download/), seriousl
 
 Follow a Friday Night Funkin' source code compilation tutorial, after this you will need to install LuaJIT.
 
-To install LuaJIT do this: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit` on a Command prompt/PowerShell
+To install LuaJIT do this: `haxelib git linc_luajit https://github.com/superpowers04/linc_luajit` on a Command prompt/PowerShell
 
 ...Or if you don't want your mod to be able to run .lua scripts, delete the "LUA_ALLOWED" line on Project.xml
 
@@ -20,6 +20,7 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 ## Credits:
 * Shadow Mario - Programmer
 * Riveren - Artist
+* crowplexus - Maintainer of "Legacy Psych"
 
 ### Special Thanks
 * bbpanzu - Ex-Programmer
@@ -30,7 +31,9 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 * PolybiusProxy - .MP4 Video Loader Library (hxCodec)
 * Keoiki - Note Splash Animations
 * Smokey - Sprite Atlas Support
-* Nebula the Zorua - LUA JIT Fork and some Lua reworks
+* Nebula the Zorua - some Lua reworks
+* superpowers04 - LUA JIT Fork
+
 _____________________________________
 
 # Features
