@@ -63,7 +63,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		var option:Option = new Option('Camera Zooms',
 			"If unchecked, the camera won't zoom in on a beat hit.",
 			'camZooms',
-			'bool'e);
+			'bool');
 		addOption(option);
 
 		var option:Option = new Option('Score Text Zoom on Hit',
