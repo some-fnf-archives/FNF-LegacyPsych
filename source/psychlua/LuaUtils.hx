@@ -87,7 +87,7 @@ class LuaUtils {
 		}
 	}
 
-	static function luaTrace(lua: #if LUA_ALLOWED State #else Dynamic #end, text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
+	public static function luaTrace(lua: #if LUA_ALLOWED State #else Dynamic #end, text:String, ignoreCheck:Bool = false, deprecated:Bool = false, color:FlxColor = FlxColor.WHITE) {
 		#if LUA_ALLOWED
 		if(ignoreCheck || getBool(lua, 'luaDebugMode')) {
 			if(deprecated && !getBool(lua, 'luaDeprecatedWarnings')) {

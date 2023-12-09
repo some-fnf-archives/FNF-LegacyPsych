@@ -3,7 +3,6 @@ package;
 #if desktop
 import Discord.DiscordClient;
 #end
-import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
@@ -32,6 +31,17 @@ import haxe.zip.Uncompress;
 import haxe.zip.Writer;*/
 
 using StringTools;
+
+@:structInit class PsychMod {
+	public var name:String = "???";
+	public var enabled:Bool = false;
+}
+
+@:structInit class PsychModList {
+	public var all:Array<String> = [];
+	public var enabled:Array<String> = [];
+	public var disabled:Array<String> = [];
+}
 
 class ModsMenuState extends MusicBeatState
 {
@@ -89,34 +99,13 @@ class ModsMenuState extends MusicBeatState
 		noModsTxt.screenCenter();
 		visibleWhenNoMods.push(noModsTxt);
 
-		var path:String = 'modsList.txt';
-		if(FileSystem.exists(path))
-		{
-			var leMods:Array<String> = CoolUtil.coolTextFile(path);
-			for (i in 0...leMods.length)
-			{
-				if(leMods.length > 1 && leMods[0].length > 0) {
-					var modSplit:Array<String> = leMods[i].split('|');
-					if(!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()))
-					{
-						addToModsList([modSplit[0], (modSplit[1] == '1')]);
-						//trace(modSplit[1]);
-					}
-				}
-			}
+		final list:PsychModList = ModsMenuState.parseList();
+		if (list.all.length != 0) {
+			addToModsList(
+				[ for (i in list.all) {name: i, enabled: list.enabled.contains(i)} ]
+			);
 		}
 
-		// FIND MOD FOLDERS
-		var boolshit = true;
-		if (FileSystem.exists("modsList.txt")){
-			for (folder in Paths.getModDirectories())
-			{
-				if(!Paths.ignoreModFolders.contains(folder))
-				{
-					addToModsList([folder, true]); //i like it false by default. -bb //Well, i like it True! -Shadow
-				}
-			}
-		}
 		saveTxt();
 
 		selector = new AttachedSprite();
@@ -203,7 +192,7 @@ class ModsMenuState extends MusicBeatState
 		buttonDisableAll = new FlxButton(startX, 0, "DISABLE ALL", function() {
 			for (i in modsList)
 			{
-				i[1] = false;
+				i.enabled = false;
 			}
 			for (mod in mods)
 			{
@@ -229,7 +218,7 @@ class ModsMenuState extends MusicBeatState
 		buttonEnableAll = new FlxButton(startX, 0, "ENABLE ALL", function() {
 			for (i in modsList)
 			{
-				i[1] = true;
+				i.enabled = true;
 			}
 			for (mod in mods)
 			{
@@ -380,29 +369,14 @@ class ModsMenuState extends MusicBeatState
 		super.create();
 	}
 
-	/*function getIntArray(max:Int):Array<Int>{
-		var arr:Array<Int> = [];
-		for (i in 0...max) {
-			arr.push(i);
-		}
-		return arr;
-	}*/
-	function addToModsList(values:Array<Dynamic>)
+	function addToModsList(values:Array<PsychMod>)
 	{
-		for (i in 0...modsList.length)
-		{
-			if(modsList[i][0] == values[0])
-			{
-				//trace(modsList[i][0], values[0]);
-				return;
-			}
-		}
 		modsList.push(values);
 	}
 
 	function updateButtonToggle()
 	{
-		if (modsList[curSelected][1])
+		if (modsList[curSelected].enabled)
 		{
 			buttonToggle.label.text = 'ON';
 			buttonToggle.color = FlxColor.GREEN;
@@ -454,7 +428,7 @@ class ModsMenuState extends MusicBeatState
 		for (values in modsList)
 		{
 			if(fileStr.length > 0) fileStr += '\n';
-			fileStr += values[0] + '|' + (values[1] ? '1' : '0');
+			fileStr += values.name + '|' + (values.enabled ? '1' : '0');
 		}
 
 		var path:String = 'modsList.txt';
@@ -534,11 +508,7 @@ class ModsMenuState extends MusicBeatState
 		}
 		if(noMods) return;
 
-		curSelected += change;
-		if(curSelected < 0)
-			curSelected = mods.length - 1;
-		else if(curSelected >= mods.length)
-			curSelected = 0;
+		curSelected = flixel.math.FlxMath.wrap(curSelected + change, 0, mods.length - 1);
 
 		var newColor:Int = mods[curSelected].color;
 		if(newColor != intendedColor) {
@@ -706,6 +676,28 @@ class ModsMenuState extends MusicBeatState
 		canExit = true;
 		trace("Problem loading file");
 	}*/
+
+	public static function parseList(path:String = 'modsList.txt'):PsychModList {
+		final modsFound:PsychModList = {all: [], enabled: [], disabled: []};
+		if(!FileSystem.exists(path)) return modsFound;
+
+		for (mod in CoolUtil.coolTextFile(path))
+		{
+			try {
+				if (mod.trim().length < 1) continue;
+				final modSplit:Array<String> = mod.split('|');
+				if(!Paths.ignoreModFolders.contains(modSplit[0].toLowerCase()))
+				{
+					if (modSplit[1] == '1') modsFound.enabled.push(modSplit[0]);
+					else if (modSplit[1] != '1') modsFound.disabled.push(modSplit[0]);
+					modsFound.all.push(modSplit[0]);
+				}
+			} catch (e:haxe.Exception)
+				trace(e);
+		}
+
+		return modsFound;
+	}
 }
 
 class ModMetadata
@@ -738,41 +730,19 @@ class ModMetadata
 					var name:String = Reflect.getProperty(stuff, "name");
 					var restart:Bool = Reflect.getProperty(stuff, "restart");
 
-				if(name != null && name.length > 0)
-				{
-					this.name = name;
-				}
-				if(description != null && description.length > 0)
-				{
-					this.description = description;
-				}
-				if(name == 'Name')
-				{
-					this.name = folder;
-				}
-				if(description == 'Description')
-				{
-					this.description = "No description provided.";
-				}
-				if(colors != null && colors.length > 2)
-				{
-					this.color = FlxColor.fromRGB(colors[0], colors[1], colors[2]);
-				}
+				if(name != null && name.length > 0) this.name = name;
+				if(description != null && description.length > 0) this.description = description;
+				if(name == 'Name') this.name = folder;
+				if(description == 'Description') this.description = "No description provided.";
+				if(colors != null && colors.length > 2) this.color = FlxColor.fromRGB(colors[0], colors[1], colors[2]);
 
 				this.restart = restart;
 				/*
-				if(stuff.name != null && stuff.name.length > 0)
-				{
-					this.name = stuff.name;
-				}
-				if(stuff.description != null && stuff.description.length > 0)
-				{
-					this.description = stuff.description;
-				}
+				if(stuff.name != null && stuff.name.length > 0) this.name = stuff.name;
+				if(stuff.description != null && stuff.description.length > 0) this.description = stuff.description;
 				if(stuff.color != null && stuff.color.length > 2)
-				{
 					this.color = FlxColor.fromRGB(stuff.color[0], stuff.color[1], stuff.color[2]);
-				}*/
+				*/
 			}
 		}
 	}

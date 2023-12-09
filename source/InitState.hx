@@ -29,6 +29,10 @@ class InitState extends flixel.FlxState {
         ClientPrefs.loadDefaultKeys();
 		ClientPrefs.loadPrefs();
 
+        #if ACHIEVEMNTS_ALLOWED
+        Achievements.init();
+        #end
+
         // -- MODS -- //
 
 		#if LUA_ALLOWED
