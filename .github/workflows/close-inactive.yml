@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-      pull-requests: write
     steps:
       - uses: actions/stale@v5
         with:
@@ -17,6 +16,7 @@ jobs:
           stale-issue-label: "stale"
           stale-issue-message: "This issue is stale because it has been open for 5 days with no activity."
           close-issue-message: "This issue was closed because it has been inactive for 5 days since being marked as stale."
+          exempt-issue-labels: "enhancement, need more information, special"
           days-before-pr-stale: -1
           days-before-pr-close: -1
           repo-token: ${{ secrets.GITHUB_TOKEN }}
