@@ -2913,7 +2913,7 @@ class FunkinLua {
 		}
 		LuaUtils.luaTrace(lua, 'Missing shader $name .frag AND .vert files!', false, false, FlxColor.RED);
 		#else
-		LuaUtils.luaTrace(lua, 'This platform doesn\'t support Runtime Shaders!', false, false, FlxColor.RED);
+		trace('This platform doesn\'t support Runtime Shaders!');
 		#end
 		return false;
 	}
