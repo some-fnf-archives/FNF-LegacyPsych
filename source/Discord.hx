@@ -1,7 +1,9 @@
 package;
 
 import Sys.sleep;
+#if discord_rpc
 import discord_rpc.DiscordRpc;
+#end
 
 #if LUA_ALLOWED
 import llua.Lua;
@@ -12,6 +14,7 @@ using StringTools;
 
 class DiscordClient
 {
+	#if discord_rpc
 	public static var isInitialized:Bool = false;
 	public function new()
 	{
@@ -91,6 +94,7 @@ class DiscordClient
 
 		//trace('Discord RPC Updated. Arguments: $details, $state, $smallImageKey, $hasStartTimestamp, $endTimestamp');
 	}
+	#end
 
 	#if LUA_ALLOWED
 	public static function addLuaCallbacks(lua:State) {
