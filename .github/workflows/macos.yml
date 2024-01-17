@@ -1,0 +1,96 @@
+# Borrowing this setup from codename cause old caching stuff doesn't work anymore
+name: Mac OS Build
+on:
+  push:
+jobs:
+  build:
+    name: Mac OS Build
+    permissions: write-all
+    runs-on: macos-11
+    steps:
+      - name: Pulling the new commit
+        uses: actions/checkout@v2
+      - name: Setting up Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.3.0
+      - name: Restore existing build cache for faster compilation
+        uses: actions/cache@v3
+        with:
+          # not caching the bin folder to prevent asset duplication and stuff like that
+          key: cache-build-mac
+          path: |
+            .haxelib/
+            export/release/macos/haxe/
+            export/release/macos/obj/
+          restore-keys: |
+            cache-build-mac
+      - name: Installing/Updating libraries
+        run: |
+          mkdir ~/haxelib
+          haxelib setup ~/haxelib 
+          haxelib git hxcpp https://github.com/Sonamaker1/hxcpp --always > nul 
+          haxelib --always set lime 8.0.2 > nul 
+          haxelib --never install flixel 4.11.0 > nul 
+          haxelib run lime setup flixel > nul 
+          haxelib run lime setup > nul 
+          haxelib --always set openfl 9.2.1 > nul 
+          haxelib --always set flixel-tools 1.5.1 > nul 
+          haxelib --always set flixel-ui 2.4.0 > nul 
+          haxelib --always set flixel-addons 2.11.0 > nul 
+          haxelib git hxCodec https://github.com/polybiusproxy/hxCodec > nul
+          haxelib git linc_luajit https://github.com/superpowers04/linc_luajit > nul 
+          haxelib git hscript https://github.com/HaxeFoundation/hscript > nul 
+          haxelib git hscript-ex https://github.com/ianharrigan/hscript-ex > nul 
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc > nul 
+          haxelib --always set lime 8.0.2 > nul 
+          haxelib git hxcpp https://github.com/Sonamaker1/hxcpp --always > nul 
+          haxelib libpath hxcpp
+          haxelib install format > nul
+          haxelib install hxp > nul
+          haxelib list
+          haxelib run lime rebuild hxcpp
+      - name: Building the game
+        run: |
+          haxelib run lime build mac
+      - name: Uploading artifact (entire build)
+        uses: actions/upload-artifact@v2
+        with:
+          name: ThisEngineBuild
+          path: export/release/macos/bin
+      - name: Uploading artifact (executable)
+        uses: actions/upload-artifact@v2
+        with:
+          name: Update-Mac
+          path:  |
+            export/release/macos/bin/PsychEngine.app/Contents/MacOS/          
+      - name: Clearing already existing cache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const caches = await github.rest.actions.getActionsCacheList({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            for (const cache of caches.data.actions_caches) {
+              if (cache.key == "cache-build-mac") {
+                console.log('Clearing ' + cache.key + '...')
+                await github.rest.actions.deleteActionsCacheById({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  cache_id: cache.id,
+                })
+                console.log("Cache cleared.")
+              }
+            }
+      - name: Uploading new cache
+        uses: actions/cache@v3
+        with:
+          # caching again since for some reason it doesnt work with the first post cache shit
+          key: cache-build-mac
+          path: |
+            .haxelib/
+            export/release/macos/haxe/
+            export/release/macos/obj/
+          restore-keys: |
+            cache-build-mac
