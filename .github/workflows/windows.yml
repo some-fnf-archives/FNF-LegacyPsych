@@ -33,6 +33,7 @@ jobs:
           haxelib --never install flixel 5.5.0 > nul 
           haxelib run lime setup flixel > nul 
           haxelib run lime setup > nul 
+          haxelib --always set tjson 1.4.0 > nul 
           haxelib --always set openfl 9.2.1 > nul 
           haxelib --always set flixel-tools 1.5.1 > nul 
           haxelib --always set flixel-ui 2.4.0 > nul 
