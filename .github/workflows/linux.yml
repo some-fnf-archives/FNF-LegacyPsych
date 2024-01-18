@@ -34,14 +34,14 @@ jobs:
           haxelib setup ~/haxelib 
           haxelib git hxcpp https://github.com/Sonamaker1/hxcpp --always > nul 
           haxelib --always set lime 8.0.2 > nul 
-          haxelib --never install flixel 4.11.0 > nul 
+          haxelib --never install flixel 5.5.0 > nul 
           haxelib run lime setup flixel > nul 
           haxelib run lime setup > nul 
           haxelib --always set tjson 1.4.0 > nul 
           haxelib --always set openfl 9.2.1 > nul 
           haxelib --always set flixel-tools 1.5.1 > nul 
           haxelib --always set flixel-ui 2.4.0 > nul 
-          haxelib --always set flixel-addons 2.11.0 > nul 
+          haxelib --always set flixel-addons 3.2.1 > nul 
           haxelib --always set hxCodec 3.0.2 > nul 
           haxelib git linc_luajit https://github.com/superpowers04/linc_luajit > nul 
           haxelib git hscript https://github.com/HaxeFoundation/hscript > nul 
