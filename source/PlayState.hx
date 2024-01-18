@@ -1,6 +1,7 @@
 package;
 
 import flixel.graphics.FlxGraphic;
+import tools.DialogueUtil; 
 #if desktop
 import Discord.DiscordClient;
 #end
@@ -70,11 +71,8 @@ import sys.FileSystem;
 import sys.io.File;
 #end
 
-#if VIDEOS_ALLOWED 
-#if (hxCodec >= "3.0.0") import hxcodec.flixel.FlxVideo as VideoPlayer;
-#elseif (hxCodec >= "2.6.1") import hxcodec.VideoHandler as VideoPlayer;
-#elseif (hxCodec == "2.6.0") import VideoPlayer;
-#else import vlc.MP4Handler as VideoPlayer; #end
+#if VIDEOS_ALLOWED
+import hxcodec.flixel.FlxVideo;
 #end
 
 using StringTools;
@@ -980,6 +978,14 @@ class PlayState extends MusicBeatState
 				addBehindDad(evilTrail);
 		}
 
+		//W, TODO: fast cars and flxTrails go here
+		if(!DialogueUtil.skipNextClear){
+			DialogueUtil.buffer = [];
+		}
+		else{
+			DialogueUtil.skipNextClear = false;
+		}
+
 		var file:String = Paths.json(songName + '/dialogue'); //Checks for json/Psych Engine dialogue
 		if (OpenFlAssets.exists(file)) {
 			dialogueJson = DialogueBoxPsych.parseDialogue(file);
@@ -1575,13 +1581,13 @@ class PlayState extends MusicBeatState
 			return;
 		}
 
-		var video:VideoPlayer = new VideoPlayer();
-		video.playVideo(filepath);
-		video.finishCallback = function()
+		var video:FlxVideo = new FlxVideo();
+		video.play(filepath);
+		video.onEndReached.add(function()
 		{
 			startAndEnd();
 			return;
-		}
+		}, true);
 		#else
 		FlxG.log.warn('Platform not supported!');
 		startAndEnd();
@@ -1634,6 +1640,25 @@ class PlayState extends MusicBeatState
 				startCountdown();
 			}
 		}
+	}
+
+	public function sayDialogue(?music:String = null):Void {
+		var shit:DialogueFile = {dialogue: DialogueUtil.buffer};
+		if(shit.dialogue.length > 0) {
+			PlayState.instance.startDialogue(shit, music);
+			return;
+		} else {
+			if(PlayState.instance.endingSong) {
+				PlayState.instance.endSong();
+			} else {
+				PlayState.instance.startCountdown();
+			}
+		}
+	}
+
+	public function clearDialogue() {
+		DialogueUtil.buffer = [];
+		return 0;
 	}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
