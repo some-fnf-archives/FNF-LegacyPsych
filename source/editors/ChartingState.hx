@@ -161,7 +161,9 @@ class ChartingState extends MusicBeatState
 	var zoomList:Array<Float> = [
 		0.25,
 		0.5,
+		0.75,
 		1,
+		1.5,
 		2,
 		3,
 		4,
@@ -171,7 +173,7 @@ class ChartingState extends MusicBeatState
 		16,
 		24
 	];
-	var curZoom:Int = 2;
+	var curZoom:Int = 3;
 
 	private var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	private var blockPressWhileTypingOnStepper:Array<FlxUINumericStepper> = [];
@@ -267,6 +269,20 @@ class ChartingState extends MusicBeatState
 		leftIcon.setPosition(GRID_SIZE + 10, -100);
 		rightIcon.setPosition(GRID_SIZE * 5.2, -100);
 
+		quantizations=getQuantList();
+		zoomList=getZoomList();
+		curZoom = zoomList.indexOf(1.0);
+		curQuant = quantizations.indexOf(16);
+		if(curZoom<0){
+			zoomList.push(1.0);
+			curZoom = zoomList.indexOf(1.0);
+			
+		}
+		if(curQuant<0){
+			quantizations.push(16);
+			curZoom = zoomList.indexOf(16);
+		}
+		Paths.currentLevel = 'shared';
 		curRenderedSustains = new FlxTypedGroup<FlxSprite>();
 		curRenderedNotes = new FlxTypedGroup<Note>();
 		curRenderedNoteType = new FlxTypedGroup<FlxText>();
@@ -406,7 +422,52 @@ class ChartingState extends MusicBeatState
 	var stageDropDown:FlxUIDropDownMenuCustom;
 	#if FLX_PITCH
 	var sliderRate:FlxUISlider;
+	
+	function getZoomList():Array<Float>
+	{
+		var swagGoodArray:Array<Float> = [0.25,0.5,0.75,1,1.5,2,3,4,6,8,12,16,24];
+		try{
+			var fullText:String = Assets.getText(Paths.txt('zoomList'));
+		
+			swagGoodArray = [];
+			var firstArray:Array<String> = fullText.split('\n');
+			
+			for (i in firstArray)
+			{
+				var fl:Float = Std.parseFloat(i);
+				swagGoodArray.push(fl);
+			}
+		}
+		catch(err){
+			//meh
+		} 
+
+		return swagGoodArray;
+	}
+	
+	function getQuantList():Array<Int>
+	{
+		var swagGoodArray:Array<Int> = [4,8,12,16,20,24,32,48,64,96,192];
+		try{
+			var fullText:String = Assets.getText(Paths.txt('quantList'));
+		
+			swagGoodArray = [];
+			var firstArray:Array<String> = fullText.split('\n');
+			
+			for (i in firstArray)
+			{
+				var fl:Int = Std.parseInt(i);
+				swagGoodArray.push(fl);
+			}
+		}
+		catch(err){
+			//meh
+		} 
+
+		return swagGoodArray;
+	}
 	#end
+	
 	function addSongUI():Void
 	{
 		UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
@@ -2067,7 +2128,7 @@ class ChartingState extends MusicBeatState
 	function updateZoom() {
 		var daZoom:Float = zoomList[curZoom];
 		var zoomThing:String = '1 / ' + daZoom;
-		if(daZoom < 1) zoomThing = Math.round(1 / daZoom) + ' / 1';
+		if(daZoom < 1) zoomThing = Math.round(1 / daZoom *10)/10 + ' / 1';
 		zoomTxt.text = 'Zoom: ' + zoomThing;
 		reloadGridLayer();
 	}

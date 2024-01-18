@@ -168,6 +168,30 @@ class TitleState extends MusicBeatState
 			#if desktop
 			if (!DiscordClient.isInitialized)
 			{
+				try{
+					var config:haxe.DynamicAccess<Dynamic> = null;
+					if (FileSystem.exists("menus/config.json"))
+						config = Json.parse(File.getContent("menus/config.json"));
+						
+					if(config !=null){
+						for (key in config.keys()){
+							var value:Array<Array<Dynamic>> = config.get(key);
+							//trace(key, value);
+							
+							var classNameThing = Type.resolveClass(key);
+							//trace(classNameThing+":"+key);
+							for (x in value){
+								trace(x);
+								if( classNameThing!=null && x.length > 0){
+									Reflect.setProperty(classNameThing, x[0], x[1]);
+								}
+							}
+						}
+					}
+				}
+				catch(err){
+					trace(err);
+				}
 				DiscordClient.initialize();
 				Application.current.onExit.add (function (exitCode) {
 					DiscordClient.shutdown();

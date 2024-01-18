@@ -29,6 +29,12 @@ typedef SwagSong =
 	var arrowSkin:String;
 	var splashSkin:String;
 	var validScore:Bool;
+	@:optional var gameOverChar:String;
+	@:optional var gameOverSound:String;
+	@:optional var gameOverLoop:String;
+	@:optional var gameOverEnd:String;
+	
+	@:optional var disableNoteRGB:Bool;
 }
 
 class Song
@@ -40,12 +46,42 @@ class Song
 	public var needsVoices:Bool = true;
 	public var arrowSkin:String;
 	public var splashSkin:String;
+	public var gameOverChar:String;
+	public var gameOverSound:String;
+	public var gameOverLoop:String;
+	public var gameOverEnd:String;
+	public var disableNoteRGB:Bool = false;
 	public var speed:Float = 1;
 	public var stage:String;
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
 
+	static var dummySong:String = '{"player1": "bf",
+		"player2": "OPPONENT_NAME",
+		"events": [],
+		"notes": [
+			{
+				"sectionNotes": [],
+				"typeOfSection": 0,
+				"lengthInSteps": 16,
+				"gfSection": false,
+				"altAnim": false,
+				"mustHitSection": false,
+				"changeBPM": false
+			}
+		],
+		"gfVersion": "gf",
+		"player3": null,
+		"splashSkin": "noteSplashes",
+		"song": "SONG_NAME",
+		"stage": "STAGE_NAME",
+		"validScore": true,
+		"arrowSkin": "",
+		"needsVoices": true,
+		"speed": 2.5,
+		"bpm": 180}
+	';
 	private static function onLoadJson(songJson:Dynamic) // Convert old charts to newest format
 	{
 		if(songJson.gfVersion == null)
@@ -94,23 +130,40 @@ class Song
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
 		#if MODS_ALLOWED
 		var moddyFile:String = Paths.modsJson(formattedFolder + '/' + formattedSong);
+		var moddy2:String = Paths.modsJson(formattedSong);
 		if(FileSystem.exists(moddyFile)) {
 			rawJson = File.getContent(moddyFile).trim();
+		}else if(FileSystem.exists(moddy2)){
+			rawJson = File.getContent(moddy2).trim();
 		}
 		#end
+		var songJson:Dynamic;
 
-		if(rawJson == null) {
-			#if sys
-			rawJson = File.getContent(Paths.json(formattedFolder + '/' + formattedSong)).trim();
-			#else
-			rawJson = Assets.getText(Paths.json(formattedFolder + '/' + formattedSong)).trim();
-			#end
+		try{
+			if(rawJson == null) {
+				#if sys
+				rawJson = File.getContent(Paths.json(formattedFolder + '/' + formattedSong)).trim();
+				
+				#else
+				rawJson = Assets.getText(Paths.json(formattedFolder + '/' + formattedSong)).trim();
+				#end
+			}
+
+			while (!rawJson.endsWith("}"))
+			{
+				rawJson = rawJson.substr(0, rawJson.length - 1);
+				// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
+			}
+			songJson = parseJSONshit(rawJson);
+			if(jsonInput != 'events') StageData.loadDirectory(songJson);
+			onLoadJson(songJson);
 		}
-
-		while (!rawJson.endsWith("}"))
-		{
-			rawJson = rawJson.substr(0, rawJson.length - 1);
-			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
+		catch(err){
+			var swagShit:SwagSong = cast Json.parse(dummySong);
+			swagShit.validScore = false;
+			swagShit.song = formattedSong.trim();
+			trace(formattedSong);
+			songJson = swagShit;
 		}
 
 		// FIX THE CASTING ON WINDOWS/NATIVE
@@ -129,9 +182,7 @@ class Song
 				daSong = songData.song;
 				daBpm = songData.bpm; */
 
-		var songJson:Dynamic = parseJSONshit(rawJson);
-		if(jsonInput != 'events') StageData.loadDirectory(songJson);
-		onLoadJson(songJson);
+		
 		return songJson;
 	}
 

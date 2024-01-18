@@ -16,11 +16,12 @@ class DiscordClient
 {
 	#if discord_rpc
 	public static var isInitialized:Bool = false;
+	public static var clientID:String = "863222024192262205";
 	public function new()
 	{
 		trace("Discord Client starting...");
 		DiscordRpc.start({
-			clientID: "863222024192262205",
+			clientID: clientID,
 			onReady: onReady,
 			onError: onError,
 			onDisconnected: onDisconnected

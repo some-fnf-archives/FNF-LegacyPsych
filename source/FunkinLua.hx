@@ -9,6 +9,7 @@ import llua.Convert;
 import psychlua.*;
 #end
 
+import tools.DialogueUtil;
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.addons.effects.FlxTrail;
@@ -34,6 +35,7 @@ import flixel.math.FlxMath;
 import flixel.util.FlxSave;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.system.FlxAssets.FlxShader;
+import flixel.addons.display.FlxBackdrop;
 
 #if (!flash && sys)
 import flixel.addons.display.FlxRuntimeShader;
@@ -45,8 +47,10 @@ import sys.io.File;
 #end
 
 import Type.ValueType;
+import Controls;
+import DialogueBoxPsych;
 
-#if hscript // TODO: Change to SScript? -CrowPlexus
+#if hscript
 import hscript.Parser;
 import hscript.Interp;
 import hscript.Expr;
@@ -63,6 +67,8 @@ class FunkinLua {
 	public static var Function_Continue:Dynamic = 0;
 	public static var Function_StopLua:Dynamic = 2;
 
+	public static var debugTraceClasses:Bool = false;
+	
 	//public var errorHandler:String->Void;
 	#if LUA_ALLOWED
 	public var lua:State = null;
@@ -117,25 +123,27 @@ class FunkinLua {
 
 		// Song/Week shit
 		set('curBpm', Conductor.bpm);
-		set('bpm', PlayState.SONG.bpm);
-		set('scrollSpeed', PlayState.SONG.speed);
 		set('crochet', Conductor.crochet);
 		set('stepCrochet', Conductor.stepCrochet);
 		set('songLength', FlxG.sound.music.length);
-		set('songName', PlayState.SONG.song);
-		set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
-		set('startedCountdown', false);
-		set('curStage', PlayState.SONG.stage);
 
-		set('isStoryMode', PlayState.isStoryMode);
-		set('difficulty', PlayState.storyDifficulty);
+		if(PlayState.SONG!=null){
+			set('bpm', PlayState.SONG.bpm);
+			set('scrollSpeed', PlayState.SONG.speed);
+			set('songName', PlayState.SONG.song);
+			set('songPath', Paths.formatToSongPath(PlayState.SONG.song));
+			set('curStage', PlayState.SONG.stage);
+			set('startedCountdown', false);
+			set('isStoryMode', PlayState.isStoryMode);
+			set('difficulty', PlayState.storyDifficulty);
 
-		var difficultyName:String = CoolUtil.difficulties[PlayState.storyDifficulty];
-		set('difficultyName', difficultyName);
-		set('difficultyPath', Paths.formatToSongPath(difficultyName));
-		set('weekRaw', PlayState.storyWeek);
-		set('week', WeekData.weeksList[PlayState.storyWeek]);
-		set('seenCutscene', PlayState.seenCutscene);
+			var difficultyName:String = CoolUtil.difficulties[PlayState.storyDifficulty];
+			set('difficultyPath', Paths.formatToSongPath(difficultyName));
+			set('difficultyName', difficultyName);
+			set('weekRaw', PlayState.storyWeek);
+			set('week', WeekData.weeksList[PlayState.storyWeek]);
+			set('seenCutscene', PlayState.seenCutscene);
+		}
 
 		// Camera poo
 		set('cameraX', 0);
@@ -165,33 +173,36 @@ class FunkinLua {
 		set('altAnim', false);
 		set('gfSection', false);
 
-		// Gameplay settings
-		set('healthGainMult', PlayState.instance.healthGain);
-		set('healthLossMult', PlayState.instance.healthLoss);
-		set('playbackRate', PlayState.instance.playbackRate);
-		set('instakillOnMiss', PlayState.instance.instakillOnMiss);
-		set('botPlay', PlayState.instance.cpuControlled);
-		set('practice', PlayState.instance.practiceMode);
+		if(PlayState.SONG!=null){
+			// Gameplay settings
+			set('healthGainMult', PlayState.instance.healthGain);
+			set('healthLossMult', PlayState.instance.healthLoss);
+			set('playbackRate', PlayState.instance.playbackRate);
+			set('instakillOnMiss', PlayState.instance.instakillOnMiss);
+			set('botPlay', PlayState.instance.cpuControlled);
+			set('practice', PlayState.instance.practiceMode);
 
-		for (i in 0...4) {
-			set('defaultPlayerStrumX' + i, 0);
-			set('defaultPlayerStrumY' + i, 0);
-			set('defaultOpponentStrumX' + i, 0);
-			set('defaultOpponentStrumY' + i, 0);
+			for (i in 0...4) {
+				set('defaultPlayerStrumX' + i, 0);
+				set('defaultPlayerStrumY' + i, 0);
+				set('defaultOpponentStrumX' + i, 0);
+				set('defaultOpponentStrumY' + i, 0);
+			}
+
+			// Default character positions woooo
+			set('defaultBoyfriendX', PlayState.instance.BF_X);
+			set('defaultBoyfriendY', PlayState.instance.BF_Y);
+			set('defaultOpponentX', PlayState.instance.DAD_X);
+			set('defaultOpponentY', PlayState.instance.DAD_Y);
+			set('defaultGirlfriendX', PlayState.instance.GF_X);
+			set('defaultGirlfriendY', PlayState.instance.GF_Y);
+
+			// Character shit
+			set('boyfriendName', PlayState.SONG.player1);
+			set('dadName', PlayState.SONG.player2);
+			set('gfName', PlayState.SONG.gfVersion);
+			//set('player3Name', PlayState.SONG.player3); //Legacy option?
 		}
-
-		// Default character positions woooo
-		set('defaultBoyfriendX', PlayState.instance.BF_X);
-		set('defaultBoyfriendY', PlayState.instance.BF_Y);
-		set('defaultOpponentX', PlayState.instance.DAD_X);
-		set('defaultOpponentY', PlayState.instance.DAD_Y);
-		set('defaultGirlfriendX', PlayState.instance.GF_X);
-		set('defaultGirlfriendY', PlayState.instance.GF_Y);
-
-		// Character shit
-		set('boyfriendName', PlayState.SONG.player1);
-		set('dadName', PlayState.SONG.player2);
-		set('gfName', PlayState.SONG.gfVersion);
 
 		// Some settings, no jokes
 		set('downscroll', ClientPrefs.data.downScroll);
@@ -1047,8 +1058,36 @@ class FunkinLua {
 			Reflect.getProperty(getInstance(), obj).remove(Reflect.getProperty(getInstance(), obj)[index]);
 		});
 
-		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVar:String, variable:String) {
+		function mapPropertyToSixPointThree(classVarInput:String, variable:String) {
 			@:privateAccess
+			//TO DO: this backports 0.7 clientprefs stuff to 0.6.3, now I *might* need to do the reverse?
+			var classVar = classVarInput;
+			//trace("Is clientprefs? " + (classVar.indexOf("backend.ClientPrefs")>=0));
+			
+			//Is this a 0.7 thing?
+			var isZeroPointSeven = classVar.indexOf("backend.")>=0 ||
+				classVar.indexOf("states.")>=0||
+				classVar.indexOf("substates.")>=0;
+				
+			//Has this been back-ported already?
+			var isMapped = classVar.indexOf("substates.GameOverSubstate")>=0 || 
+				classVar.indexOf("substates.PauseSubState")>=0 || 
+				classVar.indexOf("backend.ClientPrefs")>=0;
+			
+			if( isZeroPointSeven && !isMapped ){
+				var splitIt=classVar.split('.');
+				classVar = classVar.split('.').slice(1,splitIt.length).join("");
+			}
+			
+			if(FunkinLua.debugTraceClasses)
+				trace("Asked for "+classVarInput +", so returned "+ classVarInput);
+
+			return classVar;
+		}
+
+		Lua_helper.add_callback(lua, "getPropertyFromClass", function(classVarInput:String, variable:String) {
+			@:privateAccess
+			var classVar = mapPropertyToSixPointThree(classVarInput, variable);
 			var killMe:Array<String> = variable.split('.');
 			if(killMe.length > 1) {
 				var coverMeInPiss:Dynamic = getVarInArray(Type.resolveClass(classVar), killMe[0]);
@@ -1059,8 +1098,9 @@ class FunkinLua {
 			}
 			return getVarInArray(Type.resolveClass(classVar), variable);
 		});
-		Lua_helper.add_callback(lua, "setPropertyFromClass", function(classVar:String, variable:String, value:Dynamic) {
+		Lua_helper.add_callback(lua, "setPropertyFromClass", function(classVarInput:String, variable:String, value:Dynamic) {
 			@:privateAccess
+			var classVar = mapPropertyToSixPointThree(classVarInput, variable);
 			var killMe:Array<String> = variable.split('.');
 			if(killMe.length > 1) {
 				var coverMeInPiss:Dynamic = getVarInArray(Type.resolveClass(classVar), killMe[0]);
@@ -1895,7 +1935,8 @@ class FunkinLua {
 							} else if(PlayState.instance.members.indexOf(PlayState.instance.dadGroup) < position) {
 								position = PlayState.instance.members.indexOf(PlayState.instance.dadGroup);
 							}
-							PlayState.instance.insert(position, shit);
+							var index = position==-1?10000:position;
+							PlayState.instance.insert(index, shit);
 						}
 					}
 					shit.wasAdded = true;
@@ -2140,6 +2181,61 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "getRandomBool", function(chance:Float = 50) {
 			return FlxG.random.bool(chance);
+		});
+		Lua_helper.add_callback(lua, "say", function( dialogue:String, characterName:String)
+		{
+			trace("quick-say");
+			//var getCharacter = new DialogueCharacter(0,0, characterName);
+			var line = DialogueUtil.makeLine(dialogue, characterName, 'talk', 'normal', 0.05, '');
+			//trace(line);
+			return 0;
+		});
+
+
+		Lua_helper.add_callback(lua, "sayOption", function(id:Int, property:String, action:Dynamic)
+		{
+			var sayLine = DialogueUtil.getLine(id);
+			Reflect.setProperty(sayLine, property, action);
+			trace("Altered: ["+sayLine.text + "], "+property +":" + action);
+			return 0;
+		});
+	
+		//This does not usually work but hey there's a chance it will
+		Lua_helper.add_callback(lua, "addDialogue", function( dialogue:String, characterName:String, expression:String, boxState:String, speed:Float, sound:String)
+		{	
+			//expression:String = 'talk'
+			//boxState:String = 'normal'
+			//speed:Float = 0.05
+			//sound:String = ''
+
+			trace("ack");
+			//var getCharacter = new DialogueCharacter(0,0, characterName);
+			var line = DialogueUtil.makeLine(dialogue, characterName, expression,  boxState, speed, sound);
+			//trace(line);
+			return 1;
+		});
+		
+
+		Lua_helper.add_callback(lua, "clearDialogue", function() {
+			DialogueUtil.buffer = [];
+			return 0;
+		});
+
+		Lua_helper.add_callback(lua, "sayDialogue", function( music:String = null) {
+			var shit:DialogueFile = {dialogue: DialogueUtil.buffer};
+			if(shit.dialogue.length > 0) {
+				PlayState.instance.startDialogue(shit, music);
+				LuaUtils.luaTrace(lua, 'startDialogue: Successfully loaded dialogue', false, false, FlxColor.GREEN);
+				return true;
+			} else {
+				LuaUtils.luaTrace(lua, 'startDialogue: Your dialogue file is badly formatted!', false, false, FlxColor.RED);
+				if(PlayState.instance.endingSong) {
+					PlayState.instance.endSong();
+				} else {
+					PlayState.instance.startCountdown();
+				}
+			}
+			return false;
 		});
 		Lua_helper.add_callback(lua, "startDialogue", function(dialogueFile:String, music:String = null) {
 			var path:String;
