@@ -52,7 +52,7 @@
 
 	<section if="officialBuild">
 		<!--Heads up! Videos are automatically disabled
-			If you want to reenable them comment out or delete the line bellow -->
+			If you want to reenable them, move the line bellow out of this section -->
 		<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
 		<define name="TITLE_SCREEN_EASTER_EGG" if="officialBuild"/>
 	</section>
