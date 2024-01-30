@@ -28,6 +28,9 @@ class CreditsState extends MusicBeatState
 	private var iconArray:Array<AttachedSprite> = [];
 	private var creditsStuff:Array<Array<String>> = [];
 
+	//Lets me add credits without the txt file stuff lol
+	public static var addonList:Array<Array<String>> = [];
+	
 	var bg:FlxSprite;
 	var descText:FlxText;
 	var intendedColor:Int;
@@ -104,6 +107,10 @@ class CreditsState extends MusicBeatState
 			['evilsk8r',			'evilsk8r',			"Artist of Friday Night Funkin'",								 'https://twitter.com/evilsk8r',		 '5ABD4B'],
 			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								 'https://twitter.com/kawaisprite',		 '378FC7']
 		];
+		
+		for(i in addonList) {
+			creditsStuff.push(i);
+		}
 		
 		for(i in defaultList) {
 			creditsStuff.push(i);

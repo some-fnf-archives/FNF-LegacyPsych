@@ -260,11 +260,11 @@ class PlayState extends MusicBeatState
 	var scoreTxtTween:FlxTween;
 
 	// Stores HUD Elements in a Group
-	public var uiGroup:FlxSpriteGroup;
+	public var uiGroup:tools.UIGroup;
 	// Stores Ratings and Combo Sprites in a group
-	public var comboGroup:FlxSpriteGroup;
+	public var comboGroup:tools.UIGroup;
 	// Stores Note Elements in a Group
-	public var noteGroup:FlxTypedGroup<FlxBasic>;
+	public var noteGroup:tools.UIGroup;
 
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
@@ -960,12 +960,20 @@ class PlayState extends MusicBeatState
 				gf.visible = false;
 		}
 
-		comboGroup = new FlxSpriteGroup();
-		add(comboGroup);
-		noteGroup = new FlxTypedGroup<FlxBasic>();
-		add(noteGroup);
-		uiGroup = new FlxSpriteGroup();
-		add(uiGroup);
+		function specialAdd(spr:Dynamic){
+			try{
+				
+			}
+		}
+		comboGroup = new tools.UIGroup();
+		comboGroup.groupName = "comboGroup";
+		comboGroup.onAdd = add;
+		noteGroup = new tools.UIGroup();
+		noteGroup.groupName = "noteGroup";
+		noteGroup.onAdd = add;
+		uiGroup = new tools.UIGroup();
+		uiGroup.groupName = "uiGroup";
+		uiGroup.onAdd = add;
 
 		switch(curStage)
 		{
@@ -1143,7 +1151,21 @@ class PlayState extends MusicBeatState
 		uiGroup.cameras = [camHUD];
 		noteGroup.cameras = [camHUD];
 		comboGroup.cameras = [camHUD];
-
+		// I hate uiGroup, noteGroup, and comboGroup so much.
+		strumLineNotes.cameras = [camHUD];
+		grpNoteSplashes.cameras = [camHUD];
+		notes.cameras = [camHUD];
+		healthBar.cameras = [camHUD];
+		healthBarBG.cameras = [camHUD];
+		iconP1.cameras = [camHUD];
+		iconP2.cameras = [camHUD];
+		scoreTxt.cameras = [camHUD];
+		botplayTxt.cameras = [camHUD];
+		timeBar.cameras = [camHUD];
+		timeBarBG.cameras = [camHUD];
+		timeTxt.cameras = [camHUD];
+		doof.cameras = [camHUD];
+		
 		startingSong = true;
 
 		#if LUA_ALLOWED
@@ -1564,7 +1586,7 @@ class PlayState extends MusicBeatState
 		char.y += char.positionArray[1];
 	}
 
-	public function startVideo(name:String)
+	public function startVideo(name:String, ?startEnd:Bool = false, ?dispose:Bool = true)
 	{
 		#if VIDEOS_ALLOWED
 		inCutscene = true;
@@ -1577,7 +1599,8 @@ class PlayState extends MusicBeatState
 		#end
 		{
 			FlxG.log.warn('Couldnt find video file: ' + name);
-			startAndEnd();
+			callOnLuas('onVideoEnd', [name]);
+			if(startEnd) startAndEnd();
 			return;
 		}
 
@@ -1585,12 +1608,15 @@ class PlayState extends MusicBeatState
 		video.play(filepath);
 		video.onEndReached.add(function()
 		{
-			startAndEnd();
+			callOnLuas('onVideoEnd', [name]);
+			if(startEnd) startAndEnd();
+			if(dispose) video.dispose();
 			return;
 		}, true);
 		#else
 		FlxG.log.warn('Platform not supported!');
-		startAndEnd();
+		callOnLuas('onVideoEnd', [name]);
+		if(startEnd) startAndEnd(); //Apparently startAndEnd() breaks mods with dialogue so it is able to be turned off now
 		return;
 		#end
 	}
@@ -1605,6 +1631,7 @@ class PlayState extends MusicBeatState
 
 	var dialogueCount:Int = 0;
 	public var psychDialogue:DialogueBoxPsych;
+	public var preventStartEnd:Bool = false;
 	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
 	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void
 	{
@@ -1620,12 +1647,12 @@ class PlayState extends MusicBeatState
 			if(endingSong) {
 				psychDialogue.finishThing = function() {
 					psychDialogue = null;
-					endSong();
+					if(!preventStartEnd) endSong();
 				}
 			} else {
 				psychDialogue.finishThing = function() {
 					psychDialogue = null;
-					startCountdown();
+					if(!preventStartEnd) startCountdown();
 				}
 			}
 			psychDialogue.nextDialogueThing = startNextDialogue;
@@ -1635,9 +1662,9 @@ class PlayState extends MusicBeatState
 		} else {
 			FlxG.log.warn('Your dialogue file is badly formatted!');
 			if(endingSong) {
-				endSong();
+				if(!preventStartEnd) endSong();
 			} else {
-				startCountdown();
+				if(!preventStartEnd) startCountdown();
 			}
 		}
 	}
@@ -1649,9 +1676,9 @@ class PlayState extends MusicBeatState
 			return;
 		} else {
 			if(PlayState.instance.endingSong) {
-				PlayState.instance.endSong();
+				if(!preventStartEnd) PlayState.instance.endSong();
 			} else {
-				PlayState.instance.startCountdown();
+				if(!preventStartEnd) PlayState.instance.startCountdown();
 			}
 		}
 	}

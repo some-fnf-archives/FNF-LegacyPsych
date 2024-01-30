@@ -367,12 +367,21 @@ class Paths
 	public static function returnSound(path:String, key:String, ?library:String) {
 		#if MODS_ALLOWED
 		var file:String = modsSounds(path, key);
+		var fileLower:String = modsSounds(path, key.toLowerCase());
 		if(FileSystem.exists(file)) {
 			if(!currentTrackedSounds.exists(file)) {
 				currentTrackedSounds.set(file, Sound.fromFile(file));
 			}
 			localTrackedAssets.push(key);
 			return currentTrackedSounds.get(file);
+		}
+		else if(FileSystem.exists(fileLower)) {
+			//Partial fix for linux and mac
+			if(!currentTrackedSounds.exists(fileLower)) {
+				currentTrackedSounds.set(fileLower, Sound.fromFile(fileLower));
+			}
+			localTrackedAssets.push(key);
+			return currentTrackedSounds.get(fileLower);
 		}
 		#end
 		// I hate this so god damn much

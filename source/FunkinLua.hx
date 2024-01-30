@@ -2271,10 +2271,10 @@ class FunkinLua {
 			}
 			return false;
 		});
-		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String) {
+		Lua_helper.add_callback(lua, "startVideo", function(videoFile:String, startEndSong:Bool = true) {
 			#if VIDEOS_ALLOWED
 			if(FileSystem.exists(Paths.video(videoFile))) {
-				PlayState.instance.startVideo(videoFile);
+				PlayState.instance.startVideo(videoFile, startEndSong);
 				return true;
 			} else {
 				LuaUtils.luaTrace(lua, 'startVideo: Video file not found: ' + videoFile, false, false, FlxColor.RED);
@@ -2282,10 +2282,12 @@ class FunkinLua {
 			return false;
 
 			#else
-			if(PlayState.instance.endingSong) {
-				PlayState.instance.endSong();
-			} else {
-				PlayState.instance.startCountdown();
+			if(startEndSong){
+				if(PlayState.instance.endingSong) {
+					PlayState.instance.endSong();
+				} else {
+					PlayState.instance.startCountdown();
+				}
 			}
 			return true;
 			#end
