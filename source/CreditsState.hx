@@ -84,7 +84,6 @@ class CreditsState extends MusicBeatState
 			[''],
 			['Former Engine Members'],
 			['bb-panzu',			'bb',				'Ex-Programmer of Psych Engine',								 'https://twitter.com/bbsub3',			 '3E813A'],
-			['shubs',				'',					'Ex-Programmer of Psych Engine\nI don\'t support them.',		 '',									 'A1A1A1'],
 			[''],
 			['Engine Contributors'],
 			['CrowPlexus',			'crowplexus',		'Input System v3, Major Help and Other PRs',	                 'https://twitter.com/crowplexus',		 'A1A1A1'],
