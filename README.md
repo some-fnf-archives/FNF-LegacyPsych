@@ -1,5 +1,9 @@
-# Friday Night Funkin' - Psych Engine
+# Friday Night Funkin' - Psych Engine (LEGACY!)
 Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.
+
+**If you want to use a more updated version of Psych, with an all new Mods Menu, Softcoded Achievements, Noteskins, and much more**
+
+**Please go to [ShadowMario/FNF-PsychEngine](https://github.com/ShadowMario/FNF-PsychEngine), which is the current version of Psych.**
 
 ## Installation:
 You must have [the latest version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
@@ -24,7 +28,6 @@ otherwise, you can delete the "VIDEOS_ALLOWED" Line on Project.xml
 
 ### Special Thanks
 * bbpanzu - Ex-Programmer
-* Yoshubs - New Input System (I do not support her.)
 * SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
 * KadeDev - Fixed some cool stuff on Chart Editor and other PRs
 * iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
