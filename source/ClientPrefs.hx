@@ -6,32 +6,54 @@ import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepadInputID;
 
 class SaveVariables {
+	// -- BEHAVIOR OPTIONS -- //
 	public var autoPause:Bool = true;
-	public var downScroll:Bool = false;
-	public var middleScroll:Bool = false;
-	public var opponentStrums:Bool = true;
 	public var showFPS:Bool = true;
 	public var flashing:Bool = true;
+	public var camZooms:Bool = true;
 	public var globalAntialiasing:Bool = true;
+	// -- GAMEPLAY OPTIONS -- //
+	public var downScroll:Bool = false;
+	public var middleScroll:Bool = false;
+	public var ghostTapping:Bool = true;
+	public var opponentStrums:Bool = true;
+	public var noReset:Bool = false;
+	public var noteOffset:Int = 0;
+
+	public var ratingOffset:Int = 0;
+	public var sickWindow:Float = 45;
+	public var goodWindow:Float = 90;
+	public var badWindow:Float = 135;
+	public var safeFrames:Float = 10;
+
+	// -- VISUAL OPTIONS -- //
+	public var hideHud:Bool = false;
 	public var noteSplashes:Bool = true;
+	public var arrowHSV:Array<Array<Int>> = [
+	  [0, 0, 0], // Left
+	  [0, 0, 0], // DOwn
+	  [0, 0, 0], // Up
+	  [0, 0, 0]  // Right
+	];
+	public var comboOffset:Array<Int> = [0, 0, 0, 0]; // Rating X and Y, Combo X and Y
+	public var timeBarType:String = 'Time Left';
+	public var healthBarAlpha:Float = 1;
 	public var lowQuality:Bool = false;
 	public var shaders:Bool = true;
 	public var framerate:Int = 60;
+	// -- FEEDBACK OPTIONS -- //	
+	public var scoreZoom:Bool = true;
+	public var comboStacking = true;
+	public var pauseMusic:String = 'Tea Time';
+	public var hitsoundVolume:Float = 0;
+	// -- OTHER OPTIONS -- //
+	public var checkForUpdates:Bool = true;
+	public var discordRPC:Bool = #if cpp true #else false #end;
+	// -- UNUSED OPTIONS -- //
 	public var cursing:Bool = true;
 	public var violence:Bool = true;
-	public var camZooms:Bool = true;
-	public var hideHud:Bool = false;
-	public var noteOffset:Int = 0;
-	public var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
-	public var ghostTapping:Bool = true;
-	public var timeBarType:String = 'Time Left';
-	public var scoreZoom:Bool = true;
-	public var noReset:Bool = false;
-	public var healthBarAlpha:Float = 1;
-	public var hitsoundVolume:Float = 0;
-	public var pauseMusic:String = 'Tea Time';
-	public var checkForUpdates:Bool = true;
-	public var comboStacking = true;
+
+	// -- GAMEPLAY MODIFIERS -- //
 	public var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicative', 
@@ -52,13 +74,6 @@ class SaveVariables {
 		'botplay' => false,
 		'opponentplay' => false
 	];
-
-	public var comboOffset:Array<Int> = [0, 0, 0, 0];
-	public var ratingOffset:Int = 0;
-	public var sickWindow:Float = 45;
-	public var goodWindow:Float = 90;
-	public var badWindow:Float = 135;
-	public var safeFrames:Float = 10;
 
 	public function new() {}
 }

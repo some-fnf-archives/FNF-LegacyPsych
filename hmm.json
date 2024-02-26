@@ -1,0 +1,22 @@
+{
+  "dependencies": [
+    { "name": "lime", "type": "haxelib", "version": "8.0.1" },
+    { "name": "openfl", "type": "haxelib", "version": "9.3.2" },
+    { "name": "flixel", "type": "haxelib", "version": "5.5.0" },
+    { "name": "flixel-addons", "type": "haxelib", "version": "3.2.1" },
+    { "name": "flixel-tools", "type": "haxelib", "version": "1.5.1" },
+    { "name": "flixel-ui", "type": "haxelib", "version": "2.5.0" },
+    { "name": "hxcpp-debug-server", "type": "haxelib", "version": "1.2.4" },
+    { "name": "tjson", "type": "haxelib", "version": "1.4.0" },
+    { "name": "hxCodec", "type": "haxelib", "version": "2.6.1" },
+    { "name": "hxdiscord_rpc", "type": "haxelib", "version": "1.1.1" },
+    { "name": "hscript", "type": "haxelib", "version": null },
+    {
+      "name": "linc_luajit",
+      "type": "git",
+      "ref": "8c20c7adcb7ce9d7ebc83de10208bff96e3cb5d0",
+      "dir": null,
+      "url": "https://github.com/superpowers04/linc_luajit"
+    }
+  ]
+}

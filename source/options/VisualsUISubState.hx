@@ -111,6 +111,14 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool');
 		addOption(option);
 
+		#if hxdiscord_rpc
+		var option:Option = new Option('Discord Rich Presence',
+			'Uncheck this to prevent accidental leaks, it will hide the Application from your "Playing" box on Discord',
+			'discordRPC',
+			'bool');
+		addOption(option);
+		#end
+
 		super();
 	}
 
