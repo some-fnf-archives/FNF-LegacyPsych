@@ -974,7 +974,11 @@ class PlayState extends MusicBeatState
 		uiGroup = new tools.UIGroup();
 		uiGroup.groupName = "uiGroup";
 		uiGroup.onAdd = add;
-
+		uiGroup.cameras = [camHUD];
+		noteGroup.cameras = [camHUD];
+		comboGroup.cameras = [camHUD];
+		// I hate uiGroup, noteGroup, and comboGroup so much.
+	
 		switch(curStage)
 		{
 			case 'limo':
@@ -1148,10 +1152,6 @@ class PlayState extends MusicBeatState
 		if(ClientPrefs.data.downScroll)
 			botplayTxt.y = timeBarBG.y - 78;
 
-		uiGroup.cameras = [camHUD];
-		noteGroup.cameras = [camHUD];
-		comboGroup.cameras = [camHUD];
-		// I hate uiGroup, noteGroup, and comboGroup so much.
 		strumLineNotes.cameras = [camHUD];
 		grpNoteSplashes.cameras = [camHUD];
 		notes.cameras = [camHUD];
