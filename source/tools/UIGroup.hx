@@ -58,6 +58,7 @@ class UIGroup extends FlxBasic
 	public function add(Sprite:Dynamic):Dynamic
 	{
 		preAdd(Sprite);
+		onAdd(Sprite);
 		members.push(Sprite);
 		return Sprite;
 	}
