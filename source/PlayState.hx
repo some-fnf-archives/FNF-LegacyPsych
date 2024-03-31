@@ -4198,7 +4198,7 @@ class PlayState extends MusicBeatState
 		if(Conductor.songPosition >= 0) Conductor.songPosition = FlxG.sound.music.time;
 
 		// obtain notes that the player can hit
-		var plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
+		final plrInputNotes:Array<Note> = notes.members.filter(function(n:Note):Bool {
 			var canHit:Bool = !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit;
 			return n != null && canHit && !n.isSustainNote && n.noteData == key;
 		});
@@ -4207,19 +4207,21 @@ class PlayState extends MusicBeatState
 		var shouldMiss:Bool = !ClientPrefs.data.ghostTapping;
 
 		if (plrInputNotes.length != 0) { // slightly faster than doing `> 0` lol
-			var funnyNote:Note = plrInputNotes[0]; // front note
+			final funnyNote:Note = plrInputNotes[0]; // front note
 			// trace('✡⚐🕆☼ 💣⚐💣');
 
 			if (plrInputNotes.length > 1) {
-				var doubleNote:Note = plrInputNotes[1];
-				if (doubleNote.noteData == funnyNote.noteData) {
-					// if the note has a 0ms distance (is on top of the current note), kill it
-					if (Math.abs(doubleNote.strumTime - funnyNote.strumTime) < 1.0)
-						invalidateNote(doubleNote);
-					else if (doubleNote.strumTime < funnyNote.strumTime)
-					{
-						// replace the note if its ahead of time (or at least ensure "doubleNote" is ahead)
-						funnyNote = doubleNote;
+				for (i in 1...plrInputNotes.length) {
+					final doubleNote:Note = plrInputNotes[1];
+					if (doubleNote.noteData == funnyNote.noteData) {
+						// if the note has a 0ms distance (is on top of the current note), kill it
+						if (Math.abs(doubleNote.strumTime - funnyNote.strumTime) < 1.0) {
+							invalidateNote(doubleNote);
+						}
+						else if (doubleNote.strumTime < funnyNote.strumTime) {
+							// replace the note if its ahead of time (or at least ensure "doubleNote" is ahead)
+							funnyNote = doubleNote;
+						}
 					}
 				}
 			}
