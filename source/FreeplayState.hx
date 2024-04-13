@@ -1,9 +1,7 @@
 package;
 
-#if desktop
 #if hxdiscord_rpc
 import Discord.DiscordClient;
-#end
 #end
 import editors.ChartingState;
 import flixel.FlxG;

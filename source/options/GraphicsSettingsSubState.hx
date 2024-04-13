@@ -1,9 +1,7 @@
 package options;
 
-#if desktop
 #if hxdiscord_rpc
 import Discord.DiscordClient;
-#end
 #end
 import flixel.FlxCamera;
 import flixel.FlxG;

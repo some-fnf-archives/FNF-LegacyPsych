@@ -1,9 +1,7 @@
 package editors;
 
-#if desktop
 #if hxdiscord_rpc
 import Discord.DiscordClient;
-#end
 #end
 import flash.geom.Rectangle;
 import haxe.Json;

@@ -1,10 +1,7 @@
 package;
 
-#if desktop
 #if hxdiscord_rpc
 import Discord.DiscordClient;
-#end
-import sys.thread.Thread;
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;

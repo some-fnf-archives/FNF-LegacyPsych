@@ -1,10 +1,8 @@
 package;
 
 import flixel.graphics.FlxGraphic;
-#if desktop
 #if hxdiscord_rpc
 import Discord.DiscordClient;
-#end
 #end
 import Section;
 import Song;
