@@ -1,7 +1,9 @@
 package options;
 
 #if desktop
+#if hxdiscord_rpc
 import Discord.DiscordClient;
+#end
 #end
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -53,7 +55,7 @@ class OptionsState extends MusicBeatState
 	var selectorRight:Alphabet;
 
 	override function create() {
-		#if desktop
+		#if hxdiscord_rpc
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 

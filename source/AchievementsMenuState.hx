@@ -1,7 +1,9 @@
 package;
 
 import Achievements.Achievement;
+#if hxdiscord_rpc
 import Discord.DiscordClient;
+#end
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -40,7 +42,7 @@ class AchievementsMenuState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
-		#if desktop
+		#if hxdiscord_rpc
 		DiscordClient.changePresence("Achievements Menu", null);
 		#end
 
