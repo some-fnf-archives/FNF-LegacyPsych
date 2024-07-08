@@ -34,8 +34,18 @@ jobs:
           sudo apt-get install libvlc-dev
           sudo apt-get install libvlccore-dev
           haxelib setup ~/haxelib
-          haxelib install hmm
-          haxelib run hmm install
+          haxelib install lime 8.0.1
+          haxelib install openfl 9.3.2
+          haxelib install flixel 5.5.0
+          haxelib install flixel-addons 3.2.1
+          haxelib install flixel-tools 1.5.1
+          haxelib install flixel-ui 2.5.0
+          haxelib install hxcpp-debug-server 1.2.4
+          haxelib install tjson 1.4.0
+          haxelib install hxCodec 2.6.1
+          haxelib install hxdiscord_rpc 1.1.1
+          haxelib install hscript
+          haxelib git linc_luajit https://github.com/superpowers04/linc_luajit 8c20c7adcb7ce9d7ebc83de10208bff96e3cb5d0
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
       - name: Compile
@@ -59,8 +69,18 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup C:/haxelib
-          haxelib install hmm
-          haxelib run hmm install
+          haxelib install lime 8.0.1
+          haxelib install openfl 9.3.2
+          haxelib install flixel 5.5.0
+          haxelib install flixel-addons 3.2.1
+          haxelib install flixel-tools 1.5.1
+          haxelib install flixel-ui 2.5.0
+          haxelib install hxcpp-debug-server 1.2.4
+          haxelib install tjson 1.4.0
+          haxelib install hxCodec 2.6.1
+          haxelib install hxdiscord_rpc 1.1.1
+          haxelib install hscript
+          haxelib git linc_luajit https://github.com/superpowers04/linc_luajit 8c20c7adcb7ce9d7ebc83de10208bff96e3cb5d0
         shell: cmd
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
@@ -85,8 +105,18 @@ jobs:
       - name: Install Haxelib
         run: |
           haxelib setup ~/haxelib
-          haxelib install hmm
-          haxelib run hmm install
+          haxelib install lime 8.0.1
+          haxelib install openfl 9.3.2
+          haxelib install flixel 5.5.0
+          haxelib install flixel-addons 3.2.1
+          haxelib install flixel-tools 1.5.1
+          haxelib install flixel-ui 2.5.0
+          haxelib install hxcpp-debug-server 1.2.4
+          haxelib install tjson 1.4.0
+          haxelib install hxCodec 2.6.1
+          haxelib install hxdiscord_rpc 1.1.1
+          haxelib install hscript
+          haxelib git linc_luajit https://github.com/superpowers04/linc_luajit 8c20c7adcb7ce9d7ebc83de10208bff96e3cb5d0
       - name: Create Version Tag
         run: echo "${{github.run_id}}" > VERSION
       - name: Compile
